@@ -1,0 +1,72 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+// Function to check similarity of two files
+double checkSimilarity(const std::string& file1, const std::string& file2) {
+    // Read the contents of file1
+    std::ifstream inFile1(file1);
+    std::string line;
+    std::string content1;
+    while (std::getline(inFile1, line)) {
+        content1 += line;
+    }
+    inFile1.close();
+
+    // Read the contents of file2
+    std::ifstream inFile2(file2);
+    std::string content2;
+    while (std::getline(inFile2, line)) {
+        content2 += line;
+    }
+    inFile2.close();
+
+    // Check the similarity
+    double matches = 0;
+    for (size_t i = 0; i < content1.size(); ++i) {
+        if (content1[i] == content2[i]) {
+            matches++;
+        }
+    }
+
+    // Calculate the percentage of match
+    double similarityPercentage = (matches / content1.size()) * 100;
+
+    return similarityPercentage;
+}
+
+int main() {
+    std::string file1 = "one.txt";
+    std::string file2 = "two.txt";
+
+    // Ask the user if they want to write to the files
+    char writeFiles;
+    std::cout << "Do you want to write to the files first? (y/n): ";
+    std::cin >> writeFiles;
+
+    if (writeFiles == 'y' || writeFiles == 'Y') {
+        // Write to file1
+        std::ofstream outFile1(file1);
+        std::string content;
+        std::cout << "Enter the content for file1 (end with a blank line):\n";
+        std::cin.ignore();  // Ignore any remaining newline character
+        while (std::getline(std::cin, content) && !content.empty()) {
+            outFile1 << content << std::endl;
+        }
+        outFile1.close();
+
+        // Write to file2
+        std::ofstream outFile2(file2);
+        std::cout << "Enter the content for file2 (end with a blank line):\n";
+        while (std::getline(std::cin, content) && !content.empty()) {
+            outFile2 << content << std::endl;
+        }
+        outFile2.close();
+    }
+
+    // Check similarity and output the percentage of match
+    double similarity = checkSimilarity(file1, file2);
+    std::cout << "Similarity: " << similarity << "%\n";
+
+    return 0;
+}
